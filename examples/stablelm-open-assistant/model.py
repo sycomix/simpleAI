@@ -11,18 +11,15 @@ from transformers import AutoModelForCausalLM, AutoTokenizer, TextIteratorStream
 def preprocess_role(role: str):
     if role == "user":
         return "prompter"
-    if role == "system":
-        return "assistant"
-    return role
+    return "assistant" if role == "system" else role
 
 
 def format_chat_log(chat: list[dict[str, str]] = dict()) -> str:
-    raw_chat_text = ""
-    for item in chat:
-        raw_chat_text += (
-            f"<|{preprocess_role(item.get('role'))}|>{item.get('content')}<|endoftext|>"
-        )
-    return raw_chat_text + "<|assistant|>"
+    raw_chat_text = "".join(
+        f"<|{preprocess_role(item.get('role'))}|>{item.get('content')}<|endoftext|>"
+        for item in chat
+    )
+    return f"{raw_chat_text}<|assistant|>"
 
 
 @dataclass(unsafe_hash=True)

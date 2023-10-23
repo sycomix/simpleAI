@@ -12,10 +12,9 @@ from . import llm_embed_pb2_grpc
 
 def get_embeddings(stub, sentences):
     response = stub.Embed(sentences)
-    results = []
-    for message in response.embedding:
-        results.append(MessageToDict(message).get("feature"))
-    return results
+    return [
+        MessageToDict(message).get("feature") for message in response.embedding
+    ]
 
 
 def run(

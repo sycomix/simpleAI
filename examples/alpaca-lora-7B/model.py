@@ -64,7 +64,8 @@ class AlpacaModel(LanguageModel):
             output_scores=True,
             max_new_tokens=max_tokens,
         )
-        results = []
-        for sequence in output.sequences:
-            results.append(self.tokenizer.decode(sequence).split("### Response:")[1].strip())
+        results = [
+            self.tokenizer.decode(sequence).split("### Response:")[1].strip()
+            for sequence in output.sequences
+        ]
         return results[0]

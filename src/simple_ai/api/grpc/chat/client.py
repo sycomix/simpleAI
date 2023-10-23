@@ -13,10 +13,7 @@ from . import llm_chat_pb2_grpc
 
 def get_chatlog(stub, chatlog):
     response = stub.Chat(chatlog)
-    results = []
-    for message in response.messages:
-        results.append(MessageToDict(message))
-    return results
+    return [MessageToDict(message) for message in response.messages]
 
 
 def run(

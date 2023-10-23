@@ -21,10 +21,7 @@ class StopOnTokens(StoppingCriteria):
     stop_token_ids: Optional[Union[list, tuple]]
 
     def __call__(self, input_ids: torch.LongTensor, scores: torch.FloatTensor, **kwargs) -> bool:
-        for stop_id in self.stop_token_ids:
-            if input_ids[0][-1] == stop_id:
-                return True
-        return False
+        return any(input_ids[0][-1] == stop_id for stop_id in self.stop_token_ids)
 
 
 # Model:

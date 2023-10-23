@@ -76,9 +76,9 @@ async def complete(
             best_of=body.best_of,
             logit_bias=body.logit_bias,
         )
-        output = format_autocompletion_response(model_name=llm.name, predictions=predictions)
-        return output
-
+        return format_autocompletion_response(
+            model_name=llm.name, predictions=predictions
+        )
     predictions_stream = llm.stream_complete(
         prompt=prompt,
         suffix=body.suffix,
@@ -130,9 +130,7 @@ async def chat_complete(
             logit_bias=body.logit_bias,
         )
 
-        output = format_chat_response(model_name=llm.name, predictions=predictions)
-        return output
-
+        return format_chat_response(model_name=llm.name, predictions=predictions)
     predictions_stream = llm.stream(
         messages=messages,
         temperature=body.temperature,
@@ -173,8 +171,7 @@ async def edit(body: Annotated[InstructionInput, Body(example=dummy_edit)]):
         n=body.n,
         max_tokens=body.max_tokens,
     )
-    output = format_edits_response(model_name=llm.name, predictions=predictions)
-    return output
+    return format_edits_response(model_name=llm.name, predictions=predictions)
 
 
 # Embeddings
@@ -186,5 +183,4 @@ async def embed(body: Annotated[EmbeddingInput, Body(example=dummy_embedding)]):
 
     results = llm.embed(inputs=body.input)
 
-    output = format_embeddings_results(model_name=llm.name, embeddings=results)
-    return output
+    return format_embeddings_results(model_name=llm.name, embeddings=results)

@@ -38,9 +38,10 @@ def sanitize_user_input(
 
 def format_chat_log(chat: list[dict[str, str]] = dict()) -> str:
     """MosaicML's MPT-7B-Chat uses [ChatML](https://github.com/openai/openai-python/blob/main/chatml.md) format."""
-    raw_chat_text = ""
-    for item in chat:
-        raw_chat_text += f"<|im_start|>{sanitize_user_input(item.get('role'))}\n{sanitize_user_input(item.get('content'))}<|im_end|>\n"
+    raw_chat_text = "".join(
+        f"<|im_start|>{sanitize_user_input(item.get('role'))}\n{sanitize_user_input(item.get('content'))}<|im_end|>\n"
+        for item in chat
+    )
     return f"{raw_chat_text}<|im_start|>assistant\n"
 
 
@@ -49,10 +50,7 @@ class StopOnTokens(StoppingCriteria):
     stop_token_ids: Optional[Union[list, tuple]]
 
     def __call__(self, input_ids: torch.LongTensor, scores: torch.FloatTensor, **kwargs) -> bool:
-        for stop_id in self.stop_token_ids:
-            if input_ids[0][-1] == stop_id:
-                return True
-        return False
+        return any(input_ids[0][-1] == stop_id for stop_id in self.stop_token_ids)
 
 
 # Default sequence length is 2048, can be increased thanks to ALiBi

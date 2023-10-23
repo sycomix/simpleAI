@@ -105,11 +105,13 @@ def format_chat_delta_response_helper(
 def format_chat_delta_response(
     current_timestamp, response_id, model_name: str, predictions
 ) -> dict:
-    data = format_chat_delta_response_helper(
-        current_timestamp, response_id, model_name, predictions, finish_reason=None
+    return format_chat_delta_response_helper(
+        current_timestamp,
+        response_id,
+        model_name,
+        predictions,
+        finish_reason=None,
     )
-
-    return data
 
 
 def format_embeddings_results(model_name: str, embeddings: list, usage: dict = dummy_usage) -> dict:
@@ -133,7 +135,7 @@ def add_instructions(instructions: str, text: str) -> str:
 
 
 def format_chat_log(chat: list[dict[str, str]] = dict()) -> str:
-    raw_chat_text = ""
-    for item in chat:
-        raw_chat_text += f"{item.get('role')}: {item.get('content')}\n\n"
-    return raw_chat_text + "assistant: "
+    raw_chat_text = "".join(
+        f"{item.get('role')}: {item.get('content')}\n\n" for item in chat
+    )
+    return f"{raw_chat_text}assistant: "

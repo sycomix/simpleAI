@@ -183,7 +183,7 @@ def select_model_type(model_interface: str, task: str):
 
 
 def get_model(model_id: str, task: ModelTaskTypes, metadata: dict = MODELS_ZOO):
-    if model_id in metadata.keys():
+    if model_id in metadata:
         model_config = ModelConfig(**metadata.get(model_id)).network
         return select_model_type(model_config.type, task)(name=model_id, url=model_config.url)
     else:
@@ -200,6 +200,6 @@ def list_models(metadata: dict = MODELS_ZOO) -> list:
 
 
 def get_model_infos(model_id, metadata: dict = MODELS_ZOO) -> list:
-    if model_id in metadata.keys():
+    if model_id in metadata:
         return {"id": model_id, **metadata.get(model_id).get("metadata")}
     return {}
